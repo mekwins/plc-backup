@@ -1,0 +1,53 @@
+service:
+  environment: dev
+  scan_timeout_seconds: 5
+  upload_timeout_minutes: 15
+  max_parallel_backups: 2
+
+storage:
+  backup_root: C:\PLCBackups
+  temp_root: C:\PLCBackups\temp
+
+repository:
+  provider: github
+  url: git@github.com:org/plc-backups.git
+  branch: main
+  local_checkout: C:\Repos\plc-backups
+  username: github-actions
+
+ai:
+  provider: azure_openai
+  endpoint: https://example.openai.azure.com/
+  api_key_env: AZURE_OPENAI_KEY
+  model: gpt-4.1
+  prompt_profile: controls-engineering
+  max_input_chars: 500000
+  max_tokens: 4000
+
+logging:
+  level: INFO
+  file_path: C:\PLCBackups\logs\service.log
+
+database:
+  url: sqlite:///./plc_backup.db
+
+plcs:
+  - name: Line01-CellA-Main
+    ip: 10.40.12.15
+    slot: 0
+    path: AB_ETHIP-1\10.40.12.15\Backplane\0
+    line: Line01
+    area: CellA
+    enabled: true
+    schedule: hourly
+    repo_path: line01/cella/main
+    tags:
+      - production
+  - name: Line01-CellB-Main
+    ip: 10.40.12.16
+    slot: 0
+    path: AB_ETHIP-1\10.40.12.16\Backplane\0
+    enabled: true
+    schedule: daily
+    repo_path: line01/cellb/main
+    tags: []
